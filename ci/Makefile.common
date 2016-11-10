@@ -21,7 +21,7 @@ PKG_OS ?= linux
 PKG_ARCH = amd64
 
 # Docker
-DOCKER_REGISTRY ?=
+DOCKER_REGISTRY ?= ec2-52-213-100-253.eu-west-1.compute.amazonaws.com:5000
 
 # Travis CI
 ifneq ($(origin CI), undefined)
