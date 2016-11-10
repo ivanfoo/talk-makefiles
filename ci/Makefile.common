@@ -36,7 +36,7 @@ dependencies:
 	cd $(BUILD_PATH); \
 	$(GOGET) ./...; 
 
-packages: dependencies
+artifacts: dependencies
 	cd $(BUILD_PATH); \
 	GOOS=$(PKG_OS) GOARCH=$(PKG_ARCH) $(GOCMD) build -ldflags \
 	"-X main.version=$(BRANCH) -X main.commit=$(COMMIT)" \
