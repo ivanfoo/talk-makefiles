@@ -11,7 +11,7 @@ GOGET = $(GOCMD) get -v -t
 GOTEST = $(GOCMD) test -v
 
 # Build path
-ARTIFACTS_PATH := $(PWD)
+BUILD_PATH := $(PWD)
 
 # Artifacts
 ARTIFACTS_PATH := $(PWD)/artifacts
