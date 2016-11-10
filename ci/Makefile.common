@@ -21,6 +21,7 @@ PKG_OS ?= linux
 PKG_ARCH = amd64
 
 # Docker
+DOCKER_TAG ?= $(BRANCH)
 DOCKER_REGISTRY ?= ec2-52-213-100-253.eu-west-1.compute.amazonaws.com:5000
 
 # Travis CI
@@ -45,6 +46,6 @@ docker-build: packages
 	cd $(BUILD_PATH); \
 	docker build -t $(DOCKER_REGISTRY)/$(PROJECT):$(DOCKER_TAG) . \
 
-docker-push: docker build
+docker-push: docker-build
 	docker push $(DOCKER_REGISTRY)/$(PROJECT):$(DOCKER_TAG)
 
