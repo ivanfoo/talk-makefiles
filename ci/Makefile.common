@@ -31,18 +31,18 @@ ifneq ($(origin CI), undefined)
 	ARTIFACTS_PATH := $(TRAVIS_BUILD_DIR)/artifacts
 endif
 
-# dependencies
+dependencies:
 	$(GOGET) ./...
 
-# packages
+packages: dependencies
 	GOOS=$${os} GOARCH=$${arch} $(GOCMD) build -ldflags \
 	"-X main.version=$(BRANCH) -X main.commit=$(COMMIT)" \
 	-o "$(ARTIFACTS_PATH)/$(PROJECT)_$${os}_$${arch}/`basename $${PWD}`" .; \
 
-# docker-build
+docker-build: packages
 	cd $(BUILD_PATH); \
 	docker build -t $(DOCKER_REGISTRY)/$(PROJECT):$(DOCKER_TAG) . \
 
-# docker-push
+docker-push: docker build
 	docker push $(DOCKER_REGISTRY)/$(PROJECT):$(DOCKER_TAG)
 
