@@ -1,0 +1,48 @@
+# Default shell
+SHELL := /bin/bash
+
+# Project
+PROJECT ?=
+COMMANDS ?= 
+
+# Go commands
+GOCMD = go
+GOGET = $(GOCMD) get -v -t
+GOTEST = $(GOCMD) test -v
+
+# Build path
+ARTIFACTS_PATH := $(PWD)
+
+# Artifacts
+ARTIFACTS_PATH := $(PWD)/artifacts
+COMMIT ?= $(shell git log --format='%H' -n 1 | cut -c1-10)
+BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
+PKG_OS ?= linux
+PKG_ARCH = amd64
+
+# Docker
+DOCKER_REGISTRY ?=
+
+# Travis CI
+ifneq ($(origin CI), undefined)
+	COMMIT := $(shell echo $(TRAVIS_COMMIT) | cut -c1-10)
+	BRANCH := $(TRAVIS_BRANCH)
+	BUILD_PATH := $(TRAVIS_BUILD_DIR)
+	ARTIFACTS_PATH := $(TRAVIS_BUILD_DIR)/artifacts
+endif
+
+# dependencies
+	$(GOGET) ./...
+
+# packages
+	GOOS=$${os} GOARCH=$${arch} $(GOCMD) build -ldflags \
+	"-X main.version=$(BRANCH) -X main.commit=$(COMMIT)" \
+	-o "$(ARTIFACTS_PATH)/$(PROJECT)_$${os}_$${arch}/`basename $${PWD}`" .; \
+
+# docker-build
+	cd $(BUILD_PATH); \
+	docker build -t $(DOCKER_REGISTRY)/$(PROJECT):$(DOCKER_TAG) . \
+
+# docker-push
+	docker push $(DOCKER_REGISTRY)/$(PROJECT):$(DOCKER_TAG)
+
