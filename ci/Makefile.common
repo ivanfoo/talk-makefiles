@@ -32,12 +32,14 @@ ifneq ($(origin CI), undefined)
 endif
 
 dependencies:
-	$(GOGET) ./...
+	cd $(BUILD_PATH); \
+	$(GOGET) ./...; 
 
 packages: dependencies
-	GOOS=$${os} GOARCH=$${arch} $(GOCMD) build -ldflags \
+	cd $(BUILD_PATH); \
+	GOOS=$(PKG_OS) GOARCH=$(PKG_ARCH) $(GOCMD) build -ldflags \
 	"-X main.version=$(BRANCH) -X main.commit=$(COMMIT)" \
-	-o "$(ARTIFACTS_PATH)/$(PROJECT)_$${os}_$${arch}/`basename $${PWD}`" .; \
+	-o $(ARTIFACTS_PATH)/$(PROJECT) .; \
 
 docker-build: packages
 	cd $(BUILD_PATH); \
