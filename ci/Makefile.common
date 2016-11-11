@@ -42,7 +42,7 @@ artifacts: dependencies
 	"-X main.version=$(BRANCH) -X main.commit=$(COMMIT)" \
 	-o $(ARTIFACTS_PATH)/$(PROJECT) .; \
 
-docker-build: packages
+docker-build: artifacts
 	cd $(BUILD_PATH); \
 	docker build -t $(DOCKER_REGISTRY)/$(PROJECT):$(DOCKER_TAG) . \
 
